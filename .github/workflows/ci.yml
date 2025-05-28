@@ -1,0 +1,43 @@
+# This is the name of your workflow. You'll see this in the "Actions" tab on GitHub.
+name: Node.js CI # This is your workflow's name
+
+# This tells GitHub when to run the workflow.
+on: # When the workflow should run
+  push:           # When you push code
+    branches:     # ...to the "main" branch
+      - main      # ...run this workflow
+  pull_request:   # Or when someone opens a pull request into "main"
+    branches:
+      - main
+
+# Define the job (task) GitHub should run
+jobs:             # The name of the job
+  build:          # You can name the job anything
+
+    # Use an Ubuntu Linux machine for running the job
+    runs-on: ubuntu-latest
+
+    # Set up which Node.js version you want to use
+    strategy: # Define the Node.js version to use
+      matrix:
+        node-version: [18.x]  # You can change this to 16.x or any version
+
+    # Steps to run in this job
+    steps:
+      # Step 1: Checkout the code from your repository
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # Step 2: Set up Node.js
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      # Step 3: Install the project dependencies (from package.json)
+      - name: Install dependencies
+        run: npm install
+
+      # Step 4: Run the tests (make sure you have a test script in package.json)
+      - name: Run tests
+        run: npm test
