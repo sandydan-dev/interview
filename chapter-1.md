@@ -775,3 +775,38 @@ socket.on("disconnect", (reason)=>{
 })
 
 })
+
+### socket.on, socket.emit, socket.to(room)
+> socket.on() : listening a event. || socket.on(event, callback) 
+- is used to listen for a specific event from the client. and when the event received then callback will executed
+- when client emitted the event then the socket.on which is server will listen the event using socket.on
+
+for ex: socket.on("message", (data)=>{
+  console.log("received from client:", data)
+})
+
+> socket.emit() : sending event to a specific socket socket.emit(eventname, data), we can send a custome event to a specific connected clients.
+for example I we send sent custom message to client 
+socket.emit("message", "welcome from the server")
+
+> socket.to(room).emit(eventName, data) :
+- it is used to send a message to all users in room, except the sender, it is commonly used in chat groupt message to nofity the users.
+for example :  
+socket.to(room).emti(eventName, "message data")
+
+
+### Session vs Room management
+> Session : in socket.io, it is a individuals connection between client and the server, and each client has the unique session id so we can identify the users who are connected or not connected, we can identity this during the connection life-cycle
+for example 
+- io.on("connection", (socket)=>{
+  console.log("a user connected", socket.id)
+
+  // create a connction or emitted the event which goes from server to client
+  socket.emit("message","server send this data")
+})
+
+> Room Management : so room management in socket.io it allows to groupina a multiple client together in roomName, so message can be broadcast to every client in the room except the sender 
+for example 
+socket.join("room11")
+
+socket.to("room11").emit("messageChat", "hello everyone")
